@@ -14,7 +14,6 @@ import Navbar from './Common/NavBar';
 import { SessionProvider } from './SessionProvider';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
-//test.py97@gmail.com | diq2Hcv3$KBFd8QDSfkc7M
 
 
 createRoot(document.getElementById('root')).render(
