@@ -51,20 +51,30 @@ const Busqueda = () => {
 
   const fetchData = async () => {
     try {
-      let URL = `${apiEndpoint.api}/eventos?`;
-
+      // Base URL
+      let URL = `${apiEndpoint.api}/eventos`;
+  
+      // Añadir los parámetros si existen
+      const params = new URLSearchParams();
+  
       if (nombre) {
-        URL += `nombre=${nombre}&`;
+        params.append('nombre', nombre);
       }
       if (lat) {
-        URL += `lat=${lat}&`;
+        params.append('lat', lat);
       }
       if (lon) {
-        URL += `lon=${lon}&`;
+        params.append('lon', lon);
       }
-
+  
+      // Si hay parámetros, los añades a la URL
+      if (params.toString()) {
+        URL += `?${params.toString()}`;
+      }
+  
       console.log(URL);
-
+  
+      // Realizar la solicitud con la URL final
       const response = await axios.get(URL);
       setData(response.data);
     } catch (err) {
