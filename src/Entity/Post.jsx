@@ -14,6 +14,8 @@ import Cookies from 'universal-cookie';
 import { Email } from '@mui/icons-material';
 
 const cookies = new Cookies()
+const email = cookies.get('email')
+console.log(typeof(email))
 
 function Post(){
 
@@ -44,7 +46,7 @@ function Post(){
         lat: parseFloat(formState.lat),
         lon: parseFloat(formState.lon),
         timestamp: new Date().toISOString(),
-        organizador: cookies.get('email'), 
+        organizador: email, 
         imagen: formState.imagen,
         lugar: formState.lugar,
 
