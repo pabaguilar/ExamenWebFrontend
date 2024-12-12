@@ -44,7 +44,7 @@ function Post(){
         lat: parseFloat(formState.lat),
         lon: parseFloat(formState.lon),
         timestamp: new Date().toISOString(),
-        organizador: cookies.get('Email'), 
+        organizador: cookies.get('email'), 
         imagen: formState.imagen,
         lugar: formState.lugar,
 
