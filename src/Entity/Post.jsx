@@ -10,9 +10,12 @@ import MapComponent from '../maps/MapComponent';
 import apiEndpoint from '../../apiEndpoint.json'
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import Cookies from 'universal-cookie';
+import { Email } from '@mui/icons-material';
+
+const cookies = new Cookies()
 
 function Post(){
-  
 
     const navigate = useNavigate();
     const handleBack = () => {
@@ -41,7 +44,7 @@ function Post(){
         lat: parseFloat(formState.lat),
         lon: parseFloat(formState.lon),
         timestamp: new Date().toISOString(),
-        organizador: "ejemplo", //poner el mail de la sesion
+        organizador: cookies.get('Email'), 
         imagen: formState.imagen,
         lugar: formState.lugar,
 
