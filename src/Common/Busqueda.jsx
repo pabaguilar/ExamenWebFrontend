@@ -52,7 +52,7 @@ const Busqueda = () => {
   const fetchData = async () => {
     try {
       // Base URL
-      let URL = `${apiEndpoint.api}/eventos/`;
+      let URL = `${apiEndpoint.api}eventos/`;
 
   
       // Añadir los parámetros si existen
