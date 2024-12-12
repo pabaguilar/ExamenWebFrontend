@@ -51,7 +51,7 @@ const Busqueda = () => {
 
   const fetchData = async () => {
     try {
-      let URL = `${apiEndpoint.api}eventos?`;
+      let URL = `https://examenwebbackend-production.up.railway.app/eventos?`;
 
       if (nombre) {
         URL += `nombre=${nombre}&`;
