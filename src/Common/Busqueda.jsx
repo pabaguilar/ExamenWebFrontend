@@ -121,6 +121,7 @@ const Busqueda = () => {
             </div>
           </div>
         ))}
+      <h2 className="text-lg font-bold mb-4">Localiza todos los eventos de la zona:</h2>
       <MapComponent coordinates={coordinates}/>
     </div>
   );
