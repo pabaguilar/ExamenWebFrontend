@@ -4,7 +4,7 @@ import 'leaflet-defaulticon-compatibility';
 import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css';
 
 import { useMap } from "react-leaflet";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import L from "leaflet";
 
 function LeafletControlGeocoder({setCoordinates = null}) {
