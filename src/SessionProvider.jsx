@@ -5,7 +5,6 @@ const SessionContext = createContext();
 export const SessionProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false); 
 
-
   const funLogin = () => {
     setIsLoggedIn(true); 
   };

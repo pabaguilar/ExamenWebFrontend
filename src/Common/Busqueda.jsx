@@ -30,8 +30,6 @@ const Busqueda = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const classnameEditar = "bg-yellow-500 text-white px-2 py-2 rounded hover:bg-yellow-600 transition duration-200";
-  const classnameBorrar = "bg-red-500 text-white px-2 py-2 rounded hover:bg-red-600 transition duration-200";
 
   const handleDeleteEvent = async(id) =>{    
     try {
@@ -96,8 +94,8 @@ const Busqueda = () => {
 
   return (
     <div className='h-min-screen p-5 w-full sm:w-5/6 md:w-5/6 lg:w-4/6 mx-auto rounded-lg shadow-2xl bg-white'>
-        <ArrowBackIcon className="hover:cursor-pointer" onClick={handleBack}/>
-        <h1 className="pt-4 text-3xl font-bold mb-2">Eventos</h1>
+      <ArrowBackIcon className="hover:cursor-pointer" onClick={handleBack}/>
+      <h1 className="pt-4 text-3xl font-bold mb-2">Eventos</h1>
         {data && data.map((d, index) => (
           <div key={index}>
             <div className='p-4 border-2 my-2 rounded border-gray-200'>
@@ -113,8 +111,8 @@ const Busqueda = () => {
                   {isLoggedIn &&
                     (
                       <div className='flex gap-2 mt-2'>
-                          <button className={classnameEditar} onClick={() => handleUpdateEvent(d)} >Editar</button>
-                          <button className={classnameBorrar} onClick={() => handleDeleteEvent(d._id)}>Borrar</button>
+                          <button className="bg-yellow-500 text-white px-2 py-2 rounded hover:bg-yellow-600 transition" onClick={() => handleUpdateEvent(d)} >Editar</button>
+                          <button className="bg-red-500 text-white px-2 py-2 rounded hover:bg-red-600 transition duration-200" onClick={() => handleDeleteEvent(d._id)}>Borrar</button>
                       </div>
                     )
                   }
@@ -123,7 +121,7 @@ const Busqueda = () => {
             </div>
           </div>
         ))}
-        <MapComponent coordinates={coordinates}/>
+      <MapComponent coordinates={coordinates}/>
     </div>
   );
 };

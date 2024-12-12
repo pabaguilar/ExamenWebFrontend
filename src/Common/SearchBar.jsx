@@ -10,7 +10,6 @@ const SearchBar = () => {
     nombre: "",
   });
 
-
   const navigate = useNavigate();
 
   const search = async (event) => {
@@ -24,8 +23,6 @@ const SearchBar = () => {
         params.append("lon", parseFloat(coords.lon));
       }
     }
-
-
     navigate(`/eventos?${params.toString()}`);
   };
 

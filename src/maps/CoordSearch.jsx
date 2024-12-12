@@ -5,7 +5,6 @@ export const fetchCoordinates = async (query) => {
     const data = await response.json();
 
     if (data.length > 0) {
-      // Seleccionamos el primer resultado
       return {
         lat: data[0].lat,
         lon: data[0].lon

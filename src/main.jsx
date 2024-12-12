@@ -14,8 +14,6 @@ import Navbar from './Common/NavBar';
 import { SessionProvider } from './SessionProvider';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
-
-
 createRoot(document.getElementById('root')).render(
   <GoogleOAuthProvider clientId={keys.GoogleClientID}>
     <SessionProvider> 
@@ -31,5 +29,4 @@ createRoot(document.getElementById('root')).render(
       </Router>
     </SessionProvider>
   </GoogleOAuthProvider>
-
 )
