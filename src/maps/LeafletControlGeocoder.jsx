@@ -50,6 +50,10 @@ function LeafletControlGeocoder({setCoordinates = null}) {
       geocoder,
     })
     .on("markgeocode", function (e) {
+      if (markerRef.current) {
+        map.removeLayer(markerRef.current);
+      }
+
       const latlng = e.geocode.center;
       const icon = L.icon({
         iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png', 
@@ -58,18 +62,18 @@ function LeafletControlGeocoder({setCoordinates = null}) {
         popupAnchor: [1, -34],
       });
 
+      // Añadir un marcador en la ubicación seleccionada
+      markerRef.current = L.marker(latlng, { icon })
+          .addTo(map)
+          .bindPopup(e.geocode.name)
+          .openPopup();
+
       if (typeof setCoordinates === 'function') {
         setCoordinates({
           lat: latlng.lat,
           lon: latlng.lng,
         });
       }
-
-      // Añadir un marcador en la ubicación seleccionada
-      L.marker(latlng, { icon })
-        .addTo(map)
-        .bindPopup(e.geocode.name)
-        .openPopup();
 
       // Cambiar la vista del mapa para centrar la búsqueda
       map.setView(latlng, map.getZoom(), { animate: true });
