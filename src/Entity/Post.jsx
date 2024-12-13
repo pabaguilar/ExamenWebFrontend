@@ -14,7 +14,7 @@ import Cookies from 'universal-cookie';
 import { Email } from '@mui/icons-material';
 
 const cookies = new Cookies()
-const email = cookies.get('email')
+const emailCreador = cookies.get('email')
 console.log(typeof(email))
 
 function Post(){
@@ -25,7 +25,6 @@ function Post(){
   };
 
   const [formState, setFormState] = useState({
-    nombre: "",
     imagen: "",
     lugar: "",
     lat: "",
@@ -42,11 +41,10 @@ function Post(){
     }
   
     const updatedEvent = {
-      nombre: formState.nombre,
       lat: parseFloat(formState.lat),
       lon: parseFloat(formState.lon),
       timestamp: new Date().toISOString(),
-      organizador: email, 
+      email: emailCreador, 
       imagen: formState.imagen,
       lugar: formState.lugar,
     };
@@ -104,14 +102,6 @@ function Post(){
       <ArrowBackIcon className="hover:cursor-pointer" onClick={handleBack}/>
       <h2 className='pt-4 text-3xl font-bold mb-2' >Creacion Evento</h2>
         <form onSubmit={handleEventSubmit} className='flex flex-col'>
-          <label className="font-bold">Nombre</label>
-            <input
-            type="text"
-            name="nombre"
-            value={formState.nombre}
-            onChange={handleInputChange}
-            className='border rounded px-4 py-2  mr-3 bg-gray-300'
-            />
           <label className="font-bold">Imagen</label>
             <input
             type="text"

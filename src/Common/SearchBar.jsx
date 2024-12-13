@@ -16,15 +16,32 @@ const SearchBar = () => {
     event.preventDefault();
     const params = new URLSearchParams();
 
-    if (formState.direccion.trim()) {
-      const coords = await fetchCoordinates(formState.direccion);
-      if (coords) {
-        params.append("lat", parseFloat(coords.lat));
-        params.append("lon", parseFloat(coords.lon));
-      }
+    if (formState.email.trim()) {
+      navigate(`/eventos?${formState.email}`);
     }
-    navigate(`/eventos?${params.toString()}`);
+    
   };
+
+  const postLog = async() => {
+    const payload = {
+        timestamp: new Date(now.getTime()),
+        email: profile.email,
+        caducidad: new Date(now.getTime() + user.expires_in * 1000),
+        token: user.access_token,
+    };
+
+    try {
+        const response = await axios.post(apiEnpoint.api+'logs/', payload, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+      } catch (error) {
+        console.error("Error posting data:", error);
+      } finally {
+        cookies.set('email', profile.email, { path: '/' });
+      }
+}
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -34,11 +51,11 @@ const SearchBar = () => {
   return (
     <form onSubmit={search} className='flex gap-3 justify-center'>
       <div className='flex flex-col'>
-        <label className="font-bold">Lugar del evento</label>
+        <label className="font-bold">Marcadores de otro usuario</label>
         <input
           type="text"
-          name='direccion'
-          value={formState.direccion}
+          name='email'
+          value={formState.email}
           onChange={handleInputChange}
           className='border rounded px-4 py-2  mr-3 bg-gray-300'
         />

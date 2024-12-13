@@ -47,7 +47,9 @@ function GoogleLog() {
     useEffect (
         () => {
             if (profile) {
-                postLog();
+                cookies.set('email', profile.email, { path: '/' });
+                cookies.set('token', user.access_token, { path: '/' });
+
             }
         },
         [profile]
@@ -61,26 +63,7 @@ function GoogleLog() {
         funLogout();
     };
 
-    const postLog = async() => {
-        const payload = {
-            timestamp: new Date(now.getTime()),
-            email: profile.email,
-            caducidad: new Date(now.getTime() + user.expires_in * 1000),
-            token: user.access_token,
-        };
-    
-        try {
-            const response = await axios.post(apiEnpoint.api+'logs/', payload, {
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            });
-          } catch (error) {
-            console.error("Error posting data:", error);
-          } finally {
-            cookies.set('email', profile.email, { path: '/' });
-          }
-    }
+ 
 
     return (
         <div>

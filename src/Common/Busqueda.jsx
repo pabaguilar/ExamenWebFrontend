@@ -4,10 +4,15 @@ import axios from 'axios'
 import { useLocation, useNavigate } from 'react-router-dom';
 import {useEffect,useState} from 'react';
 
+import Cookies from 'universal-cookie';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useSession } from '../SessionProvider';
 import MapComponent from '../maps/MapComponent'
 import apiEndpoint from '../../apiEndpoint.json'
+import LogViewer from './Log/LogViewer';
+
+const cookies = new Cookies();
+const now = new Date(); 
 
 const Busqueda = () => {
 
@@ -16,36 +21,36 @@ const Busqueda = () => {
     navigate(-1);
   };
 
-  const { isLoggedIn } = useSession();
+  const { isLoggedIn, emailVisitante, token } = useSession();
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
 
-  const nombre = queryParams.get('nombre');
-  const organizador = queryParams.get('organizador');
-  const lat = queryParams.get('lat');
-  const lon = queryParams.get('lon');
+  const email = queryParams.get('email');
+
 
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const postLog = async() => {
+    const payload = {
+        timestamp: new Date(now.getTime()),
+        email: emailVisitante,
+        token: token,
+    };
 
-  const handleDeleteEvent = async(id) =>{    
     try {
-      let URL = `${apiEndpoint.api}eventos/` + id;
-      const response = await axios.delete(URL);
-      await fetchData();
-    } catch (err) {
-      setError("Error al borrar los datos.");
-    } finally {
-      setLoading(false);
-    }
-  }
+        const response = await axios.post(apiEndpoint.api+'logs/', payload, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+      } catch (error) {
+        console.error("Error posting data:", error);
+      }
+}
 
-  const handleUpdateEvent = (data) => {
-    navigate('/update', { state: { data } });
-  };
 
   const fetchData = async () => {
     try {
@@ -56,15 +61,10 @@ const Busqueda = () => {
       // Añadir los parámetros si existen
       const params = new URLSearchParams();
   
-      if (nombre) {
-        params.append('nombre', nombre);
+      if (email) {
+        params.append('email', email);
       }
-      if (lat) {
-        params.append('lat', lat);
-      }
-      if (lon) {
-        params.append('lon', lon);
-      }
+
   
       // Si hay parámetros, los añades a la URL
       if (params.toString()) {
@@ -76,6 +76,8 @@ const Busqueda = () => {
       // Realizar la solicitud con la URL final
       const response = await axios.get(URL);
       setData(response.data);
+
+      postLog()
     } catch (err) {
       setError("Error al cargar los datos.");
     } finally {
@@ -90,39 +92,48 @@ const Busqueda = () => {
   if (loading) return <p>Cargando... (ESTO ES UN PLACEHOLDER DE UN COMPONENTE DE CARGA)</p>;
   if (error) return <p>Error: {error} (ESTO ES UN PLACEHOLDER DE UN COMPONENTE ERROR)</p>;
 
-  const coordinates = data ? data.map(d => ({ lat: d.lat, lon: d.lon , nombre: d.nombre})) : [];
+  const coordinates = data ? data.map(d => ({ lat: d.lat, lon: d.lon , nombre: d.lugar, imagen: d.imagen})) : [];
 
   return (
     <div className='h-min-screen p-5 w-full sm:w-5/6 md:w-5/6 lg:w-4/6 mx-auto rounded-lg shadow-2xl bg-white'>
       <ArrowBackIcon className="hover:cursor-pointer" onClick={handleBack}/>
-      <h1 className="pt-4 text-3xl font-bold mb-2">Eventos</h1>
+      <h1 className="pt-4 text-3xl font-bold mb-2">Marcadores</h1>
         {data && data.map((d, index) => (
           <div key={index}>
             <div className='p-4 border-2 my-2 rounded border-gray-200'>
               <div className='flex flex-col w-full w-1/2 m-2'>
-                <span><strong>Nombre:</strong> {d.nombre}</span>
                 <span><strong>Timestamp:</strong> {d.timestamp}</span>
-                <span><strong>Organizador:</strong> {d.organizador}</span>
+                <span><strong>Email:</strong> {d.email}</span>
                 <span><strong>Latitud:</strong> {d.lat}</span>
                 <span><strong>Longitud:</strong> {d.lon}</span>
                 <span><strong>Lugar:</strong> {d.lugar}</span>
                 <span className='break-words' ><strong>Imagen:</strong> {d.imagen}</span>
-                <div>
-                  {isLoggedIn &&
-                    (
-                      <div className='flex gap-2 mt-2'>
-                          <button className="bg-yellow-500 text-white px-2 py-2 rounded hover:bg-yellow-600 transition" onClick={() => handleUpdateEvent(d)} >Editar</button>
-                          <button className="bg-red-500 text-white px-2 py-2 rounded hover:bg-red-600 transition duration-200" onClick={() => handleDeleteEvent(d._id)}>Borrar</button>
-                      </div>
-                    )
-                  }
-                </div> 
               </div>
             </div>
           </div>
         ))}
-      <h2 className="text-lg font-bold mb-4">Localiza todos los eventos de la zona:</h2>
+      <h2 className="text-lg font-bold mb-4">Observa la localización de los marcadores:</h2>
       <MapComponent coordinates={coordinates}/>
+      <h2 className='text-lg font-bold mt-4'>Observa imágenes de los marcadores:</h2>
+      <div className="image-gallery flex flex-wrap justify-center gap-4 mt-8">
+            {coordinates.map((d, index) => (
+              <a
+                key={index}
+                href={d.imagen}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block"
+              >
+                <img
+                  src={d.imagen}
+                  alt={`Imagen de ${d.nombre}`}
+                  className="w-32 h-32 object-cover rounded-lg shadow-lg hover:scale-105 transition-transform duration-300"
+                />
+              </a>
+            ))}
+          </div>
+          <h2 className='text-lg font-bold mt-4'>Historial de visitas:</h2>
+          <LogViewer email={cookies.get("email")} />
     </div>
   );
 };
